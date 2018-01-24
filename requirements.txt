@@ -3,3 +3,4 @@ webcolors==1.7
 colormap==1.0.1
 Flask==0.12.2
 gunicorn==19.4.5
+easydev==0.9.66
