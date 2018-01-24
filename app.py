@@ -1,42 +1,34 @@
-import os, errno, glob, time, random, string, io
 from flask import Flask, request, redirect, url_for, send_file, render_template, make_response,flash
-from werkzeug import secure_filename
-from PyPDF2 import PdfFileMerger
-from datetime import datetime
-import sqlite3 as sql
+import colorgram, webcolors, os, time
+from colormap import rgb2hex
 
-
-ALLOWED_EXTENSIONS = set(['pdf'])
 
 app = Flask(__name__)
 
+def closest_colour(requested_colour):
+    min_colours = {}
+    for key, name in webcolors.css3_hex_to_names.items():
+        r_c, g_c, b_c = webcolors.hex_to_rgb(key)
+        rd = (r_c - requested_colour[0]) ** 2
+        gd = (g_c - requested_colour[1]) ** 2
+        bd = (b_c - requested_colour[2]) ** 2
+        min_colours[(rd + gd + bd)] = name
+    return min_colours[min(min_colours.keys())]
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+def get_colour_name(rgb):
+    requested_colour = (rgb.r, rgb.g, rgb.b)
+    hex_code = rgb2hex(rgb.r, rgb.g, rgb.b)
+    try:
+        closest_name = actual_name = webcolors.rgb_to_name(requested_colour)
+    except ValueError:
+        closest_name = closest_colour(requested_colour)
+        actual_name = None
+    return actual_name, closest_name, hex_code
 
-def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-
-def getUploadedFiles(user):
-    con = sql.connect("database.db")
-    cur = con.cursor()
-    data = cur.execute("SELECT * FROM files WHERE (user =?)",(user,))
-    filenames = []
-
-    for row in data:
-        filenames.append(dict(name=row[2]))
-
-    cur.close()
-    con.close()
-    return filenames
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    user = id_generator()
     resp = make_response(render_template('index.html', title='Home'))
-    resp.set_cookie('userID', user)
-
     return resp
 
 @app.route("/upload/", methods=['POST'])
@@ -46,53 +38,19 @@ def upload():
             userID = str(request.cookies.get('userID'))
             time = str(datetime.now())
             f = request.files['file']
-            currentFiles = []
-
-            con = sql.connect("database.db")
-
-            cur = con.cursor()
-
-            print(f.filename)
-            print(con)
-            print(cur)
-            print("User: " + userID + " | time of visit: " + time + "| file:" + f.filename)
-
-            cur.execute("INSERT INTO files (user, timeOfVisit, filename,file) VALUES (?,?,?,?)",(userID,time, f.filename,f.read()))
-            con.commit()
-            print("Record successfully added")
-
-            currentFiles = getUploadedFiles(userID)
-            print(currentFiles)
-
-            cur.close()
-            con.close()
+            color_data = []
+            colors = colorgram.extract(f, 6)
+            for item in colors:
+                actual_name, closest_name, hex_code = get_colour_name(item.rgb)
+                proportion = str(format(item.proportion * 100, '.2f')) + '%'
+                color_data.append({'name': closest_name, 'hex_approx': hex_code, 'hex_actual': webcolors.name_to_hex(closest_name), 'proportion': proportion})
         except:
             print("error in insert operation")
-            return render_template('index.html', file_names = currentFiles, title='Home')
+            return render_template('index.html', data = color_data, title='Home')
         finally:
-            return render_template('index.html', file_names = currentFiles, title='Home')
+            return render_template('index.html', data = color_data, title='Home')
 
 
-
-
-@app.route("/merge/", methods=['POST'])
-def merge():
-    con = sql.connect("database.db")
-    cur = con.cursor()
-    user = str(request.cookies.get('userID'))
-    data = cur.execute("SELECT * FROM files WHERE (user =?)",(user,))
-    pdfs = []
-    merger = PdfFileMerger()
-    for row in data:
-        merger.append(io.BytesIO(row[3]))
-    cur.close()
-    con.close()
-    with open('./downloads/result' + user + '.pdf', 'wb') as fout:
-        merger.write(fout)
-    return send_file('./downloads/result' + user + '.pdf',
-                         mimetype='application/pdf',
-                         attachment_filename='result.pdf',
-                         as_attachment=True)
 
 
 if __name__ == "__main__":

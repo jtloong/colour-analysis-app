@@ -9,33 +9,32 @@
 <body>
   <title>PDF Join</title>
   <div class="outer-box">
-    <h1>PDF Join</h1>
-    <h5>Upload pdfs in the order you want them arranged and get a merged file immmediately!<h5>
+    <h1>Color Palette Extractor</h1>
+    <h5>Upload an image and extract the colour palette!</h5>
     <form action="/upload/" method=post enctype=multipart/form-data>
-      <p><input class="input-file" id='input-file' type=file name=file />
-          <label for="file"><span class='button-text' id='upload-text'>Choose a file</span></label>
-          <input class='upload-file' name="upload_button" type="submit"/>
-          <label for='upload_button'><i class="material-icons">file_upload</i><label>
-          {% for message in error %}
-            <script>
-              alert({{message}})
-            </script>
-          {% endfor %}
+      <p><input class="input-file" id='input-file' type=file name=file /></p>
+          <button class="buttons" name="upload_button" type="submit"><span class='button-text'>Analyze</span></button>
+
     </form>
 
 
 
     <table>
-      {% for files in file_names %}
-        <tr><td>{{ files.name }}</td></tr>
+        <tr>
+          <th>Colour Name</th>
+          <th>Exact Hexcode</th>
+          <th>General Hexcode</th>
+          <th>Proportion Represented</th>
+        </tr>
+      {% for color in data %}
+        <tr>
+          <td>{{ color.name }}</td>
+          <td>{{ color.hex_actual }}</td>
+          <td>{{ color.hex_approx }}</td>
+          <td>{{ color.proportion }}</td>
+        </tr>
       {% endfor %}
     </table>
-    <div class ="outer">
-      <p>
-      <form action="/merge/" method=post>
-          <button class="buttons" name="merge_button" type="submit"><i class="material-icons">file_download</i><span class='button-text'>Merge</span></button>
-      </form>
-    </p>
-    </div>
+
   </div>
 </body>

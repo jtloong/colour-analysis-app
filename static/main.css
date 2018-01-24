@@ -1,18 +1,19 @@
 h1{
-  font-family: 'Rubik Mono One';
+  font-family: 'Montserrat';
   font-size: 50px;
   margin-bottom: 10px;
 }
 
 h5{
-  width: 260px;
   margin: 0 auto;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
+  font-size: 20px;
 }
+
 
 .outer-box{
   font-family: 'Montserrat';
-  background-color: #F46A38;
+  background-color: white;
   text-align: center;
   border-radius: 10px;
   padding: 5px 0 10px 0;
@@ -33,14 +34,14 @@ h5{
 
 @media(min-width: 501px){
   .outer-box{
-    width: 350px;
+    width: 700px;
     margin:  150px auto;
 
   }
 }
 
 body{
-  background-color:#898989;
+  background-color: steelblue;
 }
 
 
@@ -52,8 +53,7 @@ body{
   height: 45px;
   color: #fff;
   text-decoration: none;
-  margin: 0 15px;
-  border: 3px solid #F46A38;
+  border: 3px solid white;
 }
 
 .buttons:hover {
@@ -80,9 +80,9 @@ body{
 .input-file {
 	/*! width: 0.1px; */
 	/*! height: 0.1px; */
-	opacity: 0;
+	/* opacity: 0; */
 	overflow: hidden;
-	position: absolute;
+	padding-bottom: 30px;
 	z-index:2;
 }
 
@@ -90,15 +90,15 @@ form{
   color: black;
 }
 
-.input-file + label {
+/* .input-file + label {
     background-color: #e3e3e3;
     width: 150px;
     border-radius: 10px;
     display: inline-block;
-}
+} */
 
 .input-file:hover{
-  opacity: 0;
+  /* opacity: 0; */
   cursor: pointer;
 }
 
@@ -125,8 +125,11 @@ form{
 table{
   background-color: #e3e3e7;
   margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 30px;
   border-radius: 5px;
-  width: 200px;
+  width: 600px;
+  padding: 10px 10px;
 }
 @-webkit-keyframes active {
   0% {transform: scale(1,1);}
