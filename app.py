@@ -33,12 +33,13 @@ def index():
 
 @app.route("/upload/", methods=['POST'])
 def upload():
+    color_data = []
     if request.method == 'POST':
         try:
             userID = str(request.cookies.get('userID'))
             time = str(datetime.now())
             f = request.files['file']
-            color_data = []
+
             colors = colorgram.extract(f, 6)
             for item in colors:
                 actual_name, closest_name, hex_code = get_colour_name(item.rgb)
