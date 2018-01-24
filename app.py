@@ -35,8 +35,6 @@ def index():
 def upload():
     color_data = []
     if request.method == 'POST':
-        userID = str(request.cookies.get('userID'))
-        time = str(datetime.now())
         f = request.files['file']
 
         colors = colorgram.extract(f, 6)
