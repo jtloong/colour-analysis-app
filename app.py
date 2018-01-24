@@ -35,21 +35,17 @@ def index():
 def upload():
     color_data = []
     if request.method == 'POST':
-        try:
-            userID = str(request.cookies.get('userID'))
-            time = str(datetime.now())
-            f = request.files['file']
+        userID = str(request.cookies.get('userID'))
+        time = str(datetime.now())
+        f = request.files['file']
 
-            colors = colorgram.extract(f, 6)
-            for item in colors:
-                actual_name, closest_name, hex_code = get_colour_name(item.rgb)
-                proportion = str(format(item.proportion * 100, '.2f')) + '%'
-                color_data.append({'name': closest_name, 'hex_approx': hex_code, 'hex_actual': webcolors.name_to_hex(closest_name), 'proportion': proportion})
-        except:
-            print("error in insert operation")
-            return render_template('index.html', data = color_data, title='Home')
-        finally:
-            return render_template('index.html', data = color_data, title='Home')
+        colors = colorgram.extract(f, 6)
+        for item in colors:
+            actual_name, closest_name, hex_code = get_colour_name(item.rgb)
+            proportion = str(format(item.proportion * 100, '.2f')) + '%'
+            color_data.append({'name': closest_name, 'hex_approx': hex_code, 'hex_actual': webcolors.name_to_hex(closest_name), 'proportion': proportion})
+
+    return render_template('index.html', data = color_data, title='Home')
 
 
 
