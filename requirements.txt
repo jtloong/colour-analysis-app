@@ -2,5 +2,8 @@ colorgram.py==1.1.0
 webcolors==1.7
 colormap==1.0.1
 Flask==0.12.2
+<<<<<<< HEAD
 gunicorn==19.4.5
+=======
+>>>>>>> e4979e0964d0a8a5f36e5166cd7193d043eb5be8
 easydev==0.9.36

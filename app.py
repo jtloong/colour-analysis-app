@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect, url_for, send_file, render_template, make_response,flash
 import colorgram, webcolors, os, time
 from colormap import rgb2hex
-
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -25,7 +25,6 @@ def get_colour_name(rgb):
         actual_name = None
     return actual_name, closest_name, hex_code
 
-
 @app.route("/", methods=['GET', 'POST'])
 def index():
     resp = make_response(render_template('index.html', title='Home'))
@@ -35,6 +34,7 @@ def index():
 def upload():
     color_data = []
     if request.method == 'POST':
+<<<<<<< HEAD
         f = request.files['file']
 
         colors = colorgram.extract(f, 6)
@@ -44,9 +44,23 @@ def upload():
             color_data.append({'name': closest_name, 'hex_approx': hex_code, 'hex_actual': webcolors.name_to_hex(closest_name), 'proportion': proportion})
 
     return render_template('index.html', data = color_data, title='Home')
-
-
-
+=======
+        color_data = []
+        try:
+            userID = str(request.cookies.get('userID'))
+            time = str(datetime.now())
+            f = request.files['file']
+            colors = colorgram.extract(f, 6)
+            for item in colors:
+                actual_name, closest_name, hex_code = get_colour_name(item.rgb)
+                proportion = str(format(item.proportion * 100, '.2f')) + '%'
+                color_data.append({'name': closest_name, 'hex_approx': hex_code, 'hex_actual': webcolors.name_to_hex(closest_name), 'proportion': proportion})
+        except:
+            print("error in insert operation")
+            return render_template('index.html', data = color_data, title='Home')
+        finally:
+            return render_template('index.html', data = color_data, title='Home')
+>>>>>>> e4979e0964d0a8a5f36e5166cd7193d043eb5be8
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5001, debug=True)
