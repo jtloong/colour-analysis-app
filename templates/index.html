@@ -22,15 +22,15 @@
     <table>
         <tr>
           <th>Colour Name</th>
-          <th>Exact Hexcode</th>
           <th>General Hexcode</th>
+          <th>Colour Bubble</th>
           <th>Proportion Represented</th>
         </tr>
       {% for color in data %}
         <tr>
           <td>{{ color.name }}</td>
-          <td>{{ color.hex_actual }}</td>
           <td>{{ color.hex_approx }}</td>
+          <td><div class='color_circle' style='background: {{ color.hex_approx}};'></div></td>
           <td>{{ color.proportion }}</td>
         </tr>
       {% endfor %}

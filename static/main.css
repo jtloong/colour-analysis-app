@@ -131,6 +131,21 @@ table{
   width: 600px;
   padding: 10px 10px;
 }
+
+th{
+  padding: 0 20px 5px 20px;
+}
+td{
+  padding: 3px 0 3px 0;
+}
+
+.color_circle{
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  margin: 0 auto;
+}
+
 @-webkit-keyframes active {
   0% {transform: scale(1,1);}
   90% {transform: scale(.9,.88);}
